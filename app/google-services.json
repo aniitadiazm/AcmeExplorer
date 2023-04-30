@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "491896611044",
+    "firebase_url": "https://acme-explorer-tm-mis-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "acme-explorer-tm-mis",
+    "storage_bucket": "acme-explorer-tm-mis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491896611044:android:de77f446a171e50a3f0cf1",
+        "android_client_info": {
+          "package_name": "us.mis.acmeexplorer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "491896611044-1jae62pp8si9eu2m09ch7q2365aq05td.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlln4pSBf8B5_e4r_P6hAWKTncX1KNI_o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "491896611044-1jae62pp8si9eu2m09ch7q2365aq05td.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
