@@ -176,7 +176,6 @@ public class AutenticacionActivity extends AppCompatActivity {
                         FirebaseUser usuario = task.getResult().getUser();
                         comprobarUsuarioBD(usuario);
                     } else {
-                        Toast.makeText(getApplicationContext(), "LLEGA", Toast.LENGTH_SHORT).show();
                         ocultarLoginButton(false);
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Autenticación incorrecta", Toast.LENGTH_SHORT).show();
@@ -302,7 +301,6 @@ public class AutenticacionActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
             try{
-                Toast.makeText(AutenticacionActivity.this, "LLEGA1", Toast.LENGTH_LONG).show();
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Toast.makeText(AutenticacionActivity.this, "LLEGA2", Toast.LENGTH_LONG).show();
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -310,7 +308,7 @@ public class AutenticacionActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(AutenticacionActivity.this, "Autencicación Google correcta", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AutenticacionActivity.this, "Autenticación Google correcta", Toast.LENGTH_SHORT).show();
                             FirebaseUser usuario = task.getResult().getUser();
                             comprobarUsuarioBD(usuario);
                         } else {
@@ -320,7 +318,7 @@ public class AutenticacionActivity extends AppCompatActivity {
                     }
                     });
             } catch (ApiException e) {
-                Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error: "+e.getStatusCode(), Toast.LENGTH_SHORT).show();
             }
         }
     }

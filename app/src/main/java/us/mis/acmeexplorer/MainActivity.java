@@ -17,8 +17,8 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
-    GoogleSignInOptions gso;
-    GoogleSignInClient gsc;
+    GoogleSignInOptions googleSignInOptions;
+    GoogleSignInClient googleSignInClient;
     FirebaseAuth fAuth;
     private ImageView cerrarSesion;
     private ImageView imageView_buscar;
@@ -35,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
         fAuth = FirebaseAuth.getInstance();
 
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("491896611044-1jae62pp8si9eu2m09ch7q2365aq05td.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
         cerrarSesion = findViewById(R.id.cerrarSesion);
         imageView_buscar = findViewById(R.id.imageView_buscar);
         imageView_favoritos = findViewById(R.id.imageView_favoritos);
@@ -42,12 +49,6 @@ public class MainActivity extends AppCompatActivity {
         txt_perfil = findViewById(R.id.txt_perfil);
 
         usuario = getIntent().getParcelableExtra(USUARIO);
-
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        gsc = GoogleSignIn.getClient(this, gso);
 
         if(usuario != null && usuario.getNombre() != null && !usuario.getNombre().equals("")) {
             txt_perfil.setText(usuario.getNombre());
