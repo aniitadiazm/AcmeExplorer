@@ -65,7 +65,7 @@ public class AutenticacionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_autenticacion);
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("491896611044-1jae62pp8si9eu2m09ch7q2365aq05td.apps.googleusercontent.com")
+                .requestIdToken("799577653974-q481mam10uipplgqeuujhb4jih1i6p9l.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -108,7 +108,7 @@ public class AutenticacionActivity extends AppCompatActivity {
         });
 
         btn_Correo.setOnClickListener(l -> attempAuthCorreo());
-        btn_Google.setOnClickListener(l -> attempAuthGoogle());
+        btn_Google.setOnClickListener(l -> attempAuthGoogle(googleSignInOptions));
 
         btn_registro.setOnClickListener(v -> {
             Intent intent = new Intent(AutenticacionActivity.this, RegistroActivity.class);
@@ -149,9 +149,10 @@ public class AutenticacionActivity extends AppCompatActivity {
 
     }
 
-    private void attempAuthGoogle() {
+    private void attempAuthGoogle(GoogleSignInOptions googleSignInOptions) {
 
         progressBar.setVisibility(View.VISIBLE);
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
@@ -164,22 +165,19 @@ public class AutenticacionActivity extends AppCompatActivity {
         }
 
         if (fAuth != null) {
-            fAuth.signInWithEmailAndPassword(et_correo.getText().toString(), et_contra.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (!task.getResult().getUser().isEmailVerified()) {
-                        progressBar.setVisibility(View.GONE);
-                        mostrarErrorVerificarCuenta(task.getResult().getUser());
-                    }
-                    else if(task.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Autenticación correcta", Toast.LENGTH_SHORT).show();
-                        FirebaseUser usuario = task.getResult().getUser();
-                        comprobarUsuarioBD(usuario);
-                    } else {
-                        ocultarLoginButton(false);
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(), "Autenticación incorrecta", Toast.LENGTH_SHORT).show();
-                    }
+            fAuth.signInWithEmailAndPassword(et_correo.getText().toString(), et_contra.getText().toString()).addOnCompleteListener(this, task -> {
+
+                if (!task.isSuccessful() || task.getResult().getUser() == null) {
+                    ocultarLoginButton(false);
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "Autenticación incorrecta", Toast.LENGTH_SHORT).show();
+                }
+                else if(!task.getResult().getUser().isEmailVerified()) {
+                    mostrarErrorVerificarCuenta(task.getResult().getUser());
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    FirebaseUser usuario = task.getResult().getUser();
+                    comprobarUsuarioBD(usuario);
                 }
             });
         } else {
@@ -245,7 +243,7 @@ public class AutenticacionActivity extends AppCompatActivity {
                     if (usuarioDTO != null) {
                         Usuario usuario = new Usuario(usuarioDTO);
                         Intent intent = new Intent(AutenticacionActivity.this, MainActivity.class);
-                        intent.putExtra(MainActivity.USUARIO, usuario);
+                        intent.putExtra(MainActivity.USUARIO_PRINCIPAL, usuario);
                         startActivity(intent);
                     }
                     else {
@@ -273,7 +271,7 @@ public class AutenticacionActivity extends AppCompatActivity {
                 Log.i("AcmeExplorer", "El usuario se ha guardado correctamente: " + usuario.getId());
                 progressBar.setVisibility(View.GONE);
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra(MainActivity.USUARIO, usuario);
+                intent.putExtra(MainActivity.USUARIO_PRINCIPAL, usuario);
                 startActivity(intent);
             } else {
                 Log.e("AcmeExplorer", "Error al guardar el usuario en la BD: " + databaseError.getMessage());
@@ -298,27 +296,31 @@ public class AutenticacionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            Task<GoogleSignInAccount> result = GoogleSignIn.getSignedInAccountFromIntent(data);
 
             try{
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                Toast.makeText(AutenticacionActivity.this, "LLEGA2", Toast.LENGTH_LONG).show();
+                GoogleSignInAccount account = result.getResult(ApiException.class);
+                assert account != null;
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-                fAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (fAuth == null) {
+                    fAuth = FirebaseAuth.getInstance();
+                }
+                if (fAuth != null) {
+                    fAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(AutenticacionActivity.this, "Autenticación Google correcta", Toast.LENGTH_SHORT).show();
-                            FirebaseUser usuario = task.getResult().getUser();
-                            comprobarUsuarioBD(usuario);
+                            FirebaseUser user = task.getResult().getUser();
+                            comprobarUsuarioBD(user);
                         } else {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(AutenticacionActivity.this, "Error al autenticarse con Google", Toast.LENGTH_SHORT).show();
+                            ocultarLoginButton(false);
+                            Toast.makeText(this, "Error al autenticarse con google", Toast.LENGTH_SHORT).show();
                         }
-                    }
                     });
+                } else {
+                    mostrarErrorGooglePlayServices();
+                }
             } catch (ApiException e) {
-                Toast.makeText(this, "Error: "+e.getStatusCode(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error "+e.getMessage()+ ": "+e.getCause() , Toast.LENGTH_SHORT).show();
             }
         }
     }

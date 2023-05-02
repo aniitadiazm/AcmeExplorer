@@ -26,6 +26,16 @@ public class FirebaseDatabaseService {
         return fDatabase.getReference("viaje/" + viajeId).getRef();
     }
 
+    public void guardarViaje(Viaje viaje, DatabaseReference.CompletionListener completionListener) {
+        ViajeDTO viajeDTO = new ViajeDTO(viaje);
+        fDatabase.getReference("viaje").child(viaje.getId()).setValue(viajeDTO, completionListener);
+    }
+
+    public void guardarUsuario(Usuario usuario, DatabaseReference.CompletionListener completionListener) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
+        fDatabase.getReference("usuario").child(usuario.getId()).setValue(usuarioDTO, completionListener);
+    }
+
     public DatabaseReference getUsuario(String usuarioId) {
         return fDatabase.getReference("usuario/" + usuarioId).getRef();
     }
@@ -48,19 +58,6 @@ public class FirebaseDatabaseService {
 
     public void setViajeAsNoFavorito(String usuarioId, String viajeId, DatabaseReference.CompletionListener completionListener) {
         fDatabase.getReference("usuario/" + usuarioId + "/viajesFavoritos").child(viajeId).removeValue(completionListener);
-    }
-
-    public void guardarViaje(Viaje viaje, DatabaseReference.CompletionListener completionListener) {
-        ViajeDTO viajeDTO = new ViajeDTO(viaje);
-        String viajeId = fDatabase.getReference("viaje").push().getKey();
-        viaje.setId(viajeId);
-        viajeDTO.setId(viajeId);
-
-        fDatabase.getReference("viaje").child(viajeId).setValue(viajeDTO, completionListener);
-    }
-    public void guardarUsuario(Usuario usuario, DatabaseReference.CompletionListener completionListener) {
-        UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
-        fDatabase.getReference("usuario").child(usuario.getId()).setValue(usuarioDTO, completionListener);
     }
 
 }

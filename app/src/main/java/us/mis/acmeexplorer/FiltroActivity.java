@@ -53,13 +53,6 @@ public class FiltroActivity extends AppCompatActivity {
         if (precioMin != null)
             txt_precioMin.setText(precioMin.toString()+" €");
 
-        editor = sharedPreferences.edit();
-        editor.putLong(DatosViajes.inicio, 0);
-        editor.putLong(DatosViajes.fin, 0);
-        editor.putString(DatosViajes.precioMax, "");
-        editor.putString(DatosViajes.precioMin, "");
-        editor.apply();
-
         btn_verResultados.setOnClickListener(v -> {
 
             String precioMaxString;

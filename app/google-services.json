@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "491896611044",
-    "firebase_url": "https://acme-explorer-tm-mis-default-rtdb.europe-west1.firebasedatabase.app",
-    "project_id": "acme-explorer-tm-mis",
-    "storage_bucket": "acme-explorer-tm-mis.appspot.com"
+    "project_number": "799577653974",
+    "firebase_url": "https://acme-explorer-9a410-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "acme-explorer-9a410",
+    "storage_bucket": "acme-explorer-9a410.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:491896611044:android:de77f446a171e50a3f0cf1",
+        "mobilesdk_app_id": "1:799577653974:android:e765300935e7b967c77f77",
         "android_client_info": {
           "package_name": "us.mis.acmeexplorer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "491896611044-1jae62pp8si9eu2m09ch7q2365aq05td.apps.googleusercontent.com",
+          "client_id": "799577653974-a5isav3g4gg2t596mnatv88tbaurrl6h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "us.mis.acmeexplorer",
+            "certificate_hash": "842e5b61fe36468b8fa23c8423070d7beb96a75b"
+          }
+        },
+        {
+          "client_id": "799577653974-q481mam10uipplgqeuujhb4jih1i6p9l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAlln4pSBf8B5_e4r_P6hAWKTncX1KNI_o"
+          "current_key": "AIzaSyASayCVYQFbilbVBf8i5GliHkKFZiWcxUM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "491896611044-1jae62pp8si9eu2m09ch7q2365aq05td.apps.googleusercontent.com",
+              "client_id": "799577653974-hcte0067motkul6iioeikbavl6luflig.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

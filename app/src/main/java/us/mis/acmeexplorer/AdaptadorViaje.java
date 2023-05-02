@@ -84,7 +84,7 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
             Intent intent = new Intent(context, ViajeActivity.class);
             intent.putExtra(DatosViajes.intentViaje, viaje);
             intent.putExtra("columnasSwitch", columnasSwitch);
-            intent.putExtra(DatosViajes.USUARIO, usuario);
+            intent.putExtra(DatosViajes.USUARIO_PRINCIPAL, usuario);
             intent.putExtra("viaje_favorito", viaje.isFavorito());
             ((Activity) context).startActivityForResult(intent, 1);
 

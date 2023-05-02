@@ -3,6 +3,7 @@ package us.mis.acmeexplorer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,7 +31,7 @@ public class ViajeActivity extends AppCompatActivity {
     private ImageView btn_mapa;
     private Button btn_comprar;
     private static Context context;
-    private Usuario usuario;
+    private Usuario usuarioPrincipal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class ViajeActivity extends AppCompatActivity {
 
         try{
             viaje = getIntent().getParcelableExtra(DatosViajes.intentViaje);
-            usuario = getIntent().getParcelableExtra(DatosViajes.USUARIO);
+            usuarioPrincipal = getIntent().getParcelableExtra(DatosViajes.USUARIO_PRINCIPAL);
 
             if(viaje != null) {
                 viaje_destino.setText(viaje.getDestino());
@@ -80,19 +81,41 @@ public class ViajeActivity extends AppCompatActivity {
                 viaje_precio.setText(viaje.getPrecio().toString()+"€");
 
                 if(viaje.isFavorito()) {
-                    viaje_favorito.setImageResource(R.drawable.corazon_lleno);
+                    firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                        if (databaseError == null) {
+                            viaje_favorito.setImageResource(R.drawable.corazon_lleno);
+                        } else {
+                            Log.e("AcmeExplorer", "Error al guardar viaje como favorito: " + databaseError.getMessage());
+                        }
+                    });
                 }else{
-                    viaje_favorito.setImageResource(R.drawable.corazon_vacio);
+                    firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                        if (databaseError == null) {
+                            viaje_favorito.setImageResource(R.drawable.corazon_vacio);
+                        } else {
+                            Log.e("AcmeExplorer", "Error al descartar viaje como favorito: " + databaseError.getMessage());
+                        }
+                    });
                 }
             }
 
             viaje_favorito.setOnClickListener(view -> {
                 if(viaje.isFavorito()) {
-                    viaje.setFavorito(false);
-                    viaje_favorito.setImageResource(R.drawable.corazon_vacio);
+                    firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                        if (databaseError == null) {
+                            viaje_favorito.setImageResource(R.drawable.corazon_vacio);
+                        } else {
+                            Log.e("AcmeExplorer", "Error al descartar viaje como favorito: " + databaseError.getMessage());
+                        }
+                    });
                 }else{
-                    viaje.setFavorito(true);
-                    viaje_favorito.setImageResource(R.drawable.corazon_lleno);
+                    firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                        if (databaseError == null) {
+                            viaje_favorito.setImageResource(R.drawable.corazon_lleno);
+                        } else {
+                            Log.e("AcmeExplorer", "Error al guardar viaje como favorito: " + databaseError.getMessage());
+                        }
+                    });
                 }
             });
 

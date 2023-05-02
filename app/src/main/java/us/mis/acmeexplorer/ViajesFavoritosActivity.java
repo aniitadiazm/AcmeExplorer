@@ -26,8 +26,8 @@ public class ViajesFavoritosActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AdaptadorViaje adaptadorViaje;
     private GridLayoutManager gridLayoutManager;
-    private List<Viaje> viajes_favoritos;
-    private Usuario usuario;
+    private List<Viaje> viajes_favoritos  = new ArrayList<>();
+    private Usuario usuarioPrincipal;
 
 
     @Override
@@ -35,7 +35,7 @@ public class ViajesFavoritosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viajesfavoritos);
 
-        usuario = getIntent().getParcelableExtra(MainActivity.USUARIO);
+        usuarioPrincipal = getIntent().getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
         getViajesFavoritosFromUsuario();
 
       /*  if (DatosViajes.VIAJES == null || DatosViajes.VIAJES.isEmpty()){
@@ -62,7 +62,7 @@ public class ViajesFavoritosActivity extends AppCompatActivity {
 
     private void getViajesFavoritosFromUsuario() {
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
-        firebaseDatabaseService.getViajesFavoritosFromUsuario(usuario.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabaseService.getViajesFavoritosFromUsuario(usuarioPrincipal.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -114,7 +114,7 @@ public class ViajesFavoritosActivity extends AppCompatActivity {
         }
 
         recyclerView = findViewById(R.id.recyclerView_viajesFavoritos);
-        adaptadorViaje = new AdaptadorViaje(viajes_favoritos, this, false, usuario);
+        adaptadorViaje = new AdaptadorViaje(viajes_favoritos, this, false, usuarioPrincipal);
 
         gridLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);

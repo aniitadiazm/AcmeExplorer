@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView iv_perfil;
     private TextView txt_perfil;
     private Usuario usuario;
-    public static String USUARIO = "usuario";
+    public static String USUARIO_PRINCIPAL = "usuarioPrincipal";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("491896611044-1jae62pp8si9eu2m09ch7q2365aq05td.apps.googleusercontent.com")
+                .requestIdToken("799577653974-q481mam10uipplgqeuujhb4jih1i6p9l.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         iv_perfil = findViewById(R.id.iv_perfil);
         txt_perfil = findViewById(R.id.txt_perfil);
 
-        usuario = getIntent().getParcelableExtra(USUARIO);
+        usuario = getIntent().getParcelableExtra(USUARIO_PRINCIPAL);
 
         if(usuario != null && usuario.getNombre() != null && !usuario.getNombre().equals("")) {
             txt_perfil.setText(usuario.getNombre());
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         txt_perfil.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, PerfilUsuarioActivity.class);
+            intent.putExtra(PerfilUsuarioActivity.USUARIO_PRINCIPAL, usuario);
             startActivity(intent);
         });
 

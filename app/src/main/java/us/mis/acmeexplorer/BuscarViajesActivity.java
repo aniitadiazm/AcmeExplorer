@@ -34,9 +34,7 @@ public class BuscarViajesActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferencesFiltro;
     List<Viaje> viajes = new ArrayList<>();
     List<Viaje> viajesFiltrados = new ArrayList<>();
-    private Usuario usuario;
-    private Viaje viaje;
-    public static String USUARIO = "usuario";
+    private Usuario usuarioPrincipal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +61,14 @@ public class BuscarViajesActivity extends AppCompatActivity {
             }
         }
 
-        usuario = getIntent().getParcelableExtra(MainActivity.USUARIO);
-        firebaseDatabaseService.getUsuario(usuario.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        usuarioPrincipal = getIntent().getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
+        firebaseDatabaseService.getUsuario(usuarioPrincipal.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     UsuarioDTO usuarioDTO = dataSnapshot.getValue(UsuarioDTO.class);
                     if (usuarioDTO != null) {
-                        usuario = new Usuario(usuarioDTO);
+                        usuarioPrincipal = new Usuario(usuarioDTO);
                         obtenerViajes();
                     }
                 }
@@ -82,15 +80,12 @@ public class BuscarViajesActivity extends AppCompatActivity {
             }
         });
 
-       /* adaptadorViaje = new AdaptadorViaje(viajes, this, true, usuario);
-
+        /*adaptadorViaje = new AdaptadorViaje(viajes, this, true, usuarioPrincipal);
         switch_nColumnas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 int spanCount = isChecked ? 2 : 1;
                 gridLayoutManager.setSpanCount(spanCount);
-
                 if(spanCount == 2){
                     img_nColumnas.setImageResource(R.drawable.img_1columna);
                 } else {
@@ -98,7 +93,6 @@ public class BuscarViajesActivity extends AppCompatActivity {
                 }
             }
         });
-
         gridLayoutManager = new GridLayoutManager(this, 1);
         recyclerView_viajes.setLayoutManager(gridLayoutManager);
         recyclerView_viajes.setAdapter(adaptadorViaje);*/
@@ -115,18 +109,23 @@ public class BuscarViajesActivity extends AppCompatActivity {
                         ViajeDTO viajeDTO = viajeDS.getValue(ViajeDTO.class);
                         if (viajeDTO != null) {
                             Viaje viaje = new Viaje(viajeDTO);
-                            viaje.setFavorito(usuario.getViajesFavoritos().containsValue(viaje.getId()));
+                            viaje.setFavorito(usuarioPrincipal.getViajesFavoritos().containsValue(viaje.getId()));
                             viajes.add(viaje);
                         }
                     }
                     viajesFiltrados = comprobarFiltros(viajes);
 
-                    adaptadorViaje = new AdaptadorViaje(viajesFiltrados, BuscarViajesActivity.this, true, usuario);
+                    adaptadorViaje = new AdaptadorViaje(viajesFiltrados, BuscarViajesActivity.this, true, usuarioPrincipal);
                     switch_nColumnas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             int spanCount = isChecked ? 2 : 1;
                             gridLayoutManager.setSpanCount(spanCount);
+                            if(spanCount == 2){
+                                img_nColumnas.setImageResource(R.drawable.img_1columna);
+                            } else {
+                                img_nColumnas.setImageResource(R.drawable.img_2columnas);
+                            }
                         }
                     });
                     gridLayoutManager = new GridLayoutManager(BuscarViajesActivity.this, 1);
@@ -193,7 +192,7 @@ public class BuscarViajesActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                usuario = intent.getParcelableExtra(DatosViajes.USUARIO);
+                usuarioPrincipal = intent.getParcelableExtra(DatosViajes.USUARIO_PRINCIPAL);
                 obtenerViajes();
             }
         } else if(requestCode == 2) {
@@ -204,7 +203,7 @@ public class BuscarViajesActivity extends AppCompatActivity {
                     if(viajesFiltrados.size() == 0){
                         Toast.makeText(this, "Lo sentimos, no hay viajes para los filtros establecidos", Toast.LENGTH_LONG).show();
                     }
-                    adaptadorViaje = new AdaptadorViaje(viajesFiltrados, this, true, usuario);
+                    adaptadorViaje = new AdaptadorViaje(viajesFiltrados, this, true, usuarioPrincipal);
                     recyclerView_viajes.swapAdapter(adaptadorViaje, false);
                 }
             }
@@ -217,4 +216,9 @@ public class BuscarViajesActivity extends AppCompatActivity {
         startActivityForResult(intent, 2);
     }
 
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.USUARIO_PRINCIPAL, usuarioPrincipal);
+        startActivity(intent);
+    }
 }

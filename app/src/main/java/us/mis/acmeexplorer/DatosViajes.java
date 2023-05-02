@@ -95,6 +95,6 @@ public class DatosViajes {
     public final static String fin = "fin";
     public final static String precioMax = "precioMax";
     public final static String precioMin = "precioMin";
-    public final static String USUARIO = "usuario";
+    public final static String USUARIO_PRINCIPAL = "usuarioPrincipal";
 }
 

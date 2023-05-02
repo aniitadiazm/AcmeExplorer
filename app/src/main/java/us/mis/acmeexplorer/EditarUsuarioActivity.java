@@ -52,7 +52,7 @@ public class EditarUsuarioActivity extends AppCompatActivity {
 
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
 
-        usuario = getIntent().getParcelableExtra(DatosViajes.USUARIO);
+        usuario = getIntent().getParcelableExtra(DatosViajes.USUARIO_PRINCIPAL);
         nombre = findViewById(R.id.editTextNombre);
         apellidos = findViewById(R.id.editTextApellidos);
         correo = findViewById(R.id.textViewCorreo);
@@ -90,7 +90,7 @@ public class EditarUsuarioActivity extends AppCompatActivity {
                 if (databaseError == null) {
                     Log.i("AcmeExplorer", "El usuario se ha actualizado correctamente: " + usuario.getId());
                     Intent intent = new Intent(this, PerfilUsuarioActivity.class);
-                    intent.putExtra(PerfilUsuarioActivity.USUARIO, usuario);
+                    intent.putExtra(PerfilUsuarioActivity.USUARIO_PRINCIPAL, usuario);
                     startActivity(intent);
                 } else {
                     Log.i("AcmeExplorer", "Error al actualizar el usuario: " + databaseError.getMessage());

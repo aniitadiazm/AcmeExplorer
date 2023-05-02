@@ -64,7 +64,7 @@ public class RegistroActivity extends AppCompatActivity {
             } else if(!et_confirm.getText().toString().equals(et_contra.getText().toString())) {
                 et_confirm.setError("Las contraseñas deben ser iguales");
             } else {
-                fAuth.createUserWithEmailAndPassword(et_correo.getText().toString(), et_contra.getText().toString()).addOnCompleteListener(task -> {
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(et_correo.getText().toString(), et_contra.getText().toString()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_LONG).show();
                         RegistroActivity.this.finish();

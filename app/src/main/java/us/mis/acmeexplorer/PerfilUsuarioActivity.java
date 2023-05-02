@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 public class PerfilUsuarioActivity extends AppCompatActivity {
 
     private FirebaseAuth fAuth;
-    public static String USUARIO = "usuario";
+    public static String USUARIO_PRINCIPAL = "usuarioPrincipal";
     private ImageView iv_foto;
     private ImageView ubicacion;
     private TextView tv_nombre;
@@ -29,6 +29,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     private Button btn_editar;
     private Button btn_cambiarContra;
     private Usuario usuario;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
         btn_cambiarContra = findViewById(R.id.buttonCambiarContra);
 
         fAuth = FirebaseAuth.getInstance();
-        usuario = getIntent().getParcelableExtra(USUARIO);
+        usuario = getIntent().getParcelableExtra(USUARIO_PRINCIPAL);
 
         if (usuario != null) {
             tv_nombre.setText(usuario.getNombre());
@@ -66,7 +67,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
 
             btn_editar.setOnClickListener(v -> {
                 Intent intent = new Intent(PerfilUsuarioActivity.this, EditarUsuarioActivity.class);
-                intent.putExtra(USUARIO, usuario);
+                intent.putExtra(USUARIO_PRINCIPAL, usuario);
                 startActivity(intent);
             });
 
@@ -83,7 +84,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(MainActivity.USUARIO, usuario);
+        intent.putExtra(MainActivity.USUARIO_PRINCIPAL, usuario);
         startActivity(intent);
     }
 
