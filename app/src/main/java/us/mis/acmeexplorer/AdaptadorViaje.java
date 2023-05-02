@@ -86,7 +86,7 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
         ImageView viaje_favorito = viajeViewHolder.corazon.findViewById(R.id.viaje_corazon);
         viaje_favorito.setOnClickListener(v -> {
             if(viaje.isFavorito()) {
-                firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                firebaseDatabaseService.setViajeAsNoFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
                     if (databaseError == null) {
                         viajeViewHolder.corazon.setImageResource(R.drawable.corazon_vacio);
                     } else {

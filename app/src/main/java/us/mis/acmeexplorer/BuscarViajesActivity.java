@@ -36,6 +36,8 @@ public class BuscarViajesActivity extends AppCompatActivity {
     List<Viaje> viajesFiltrados = new ArrayList<>();
     private Usuario usuarioPrincipal;
 
+    private Viaje VIAJE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +49,23 @@ public class BuscarViajesActivity extends AppCompatActivity {
 
         sharedPreferencesFiltro = getSharedPreferences(DatosViajes.filtro, MODE_PRIVATE);
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
-        
-        usuarioPrincipal = getIntent().getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
+
+        //Descomentar este fragmento para subir viajes a la base de datos
+        viajes = Viaje.generarViajes(40);
+        for (int i = 0; i < viajes.size(); i++) {
+            VIAJE = viajes.get(i);
+            firebaseDatabaseService.guardarViaje(VIAJE, (databaseError, databaseReference) -> {
+                if (databaseError == null) {
+                    Log.i("AcmeExplorer", "El viaje se ha guardado correctamente: " + VIAJE.getId());
+
+                } else {
+                    Log.e("AcmeExplorer", "Error al guardar el viaje en la BD: " + databaseError.getMessage());
+                }
+            });
+        }
+    }
+
+   /*     usuarioPrincipal = getIntent().getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
         firebaseDatabaseService.getUsuario(usuarioPrincipal.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -72,12 +89,6 @@ public class BuscarViajesActivity extends AppCompatActivity {
     private void obtenerViajes() {
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
 
-        if(firebaseDatabaseService.getAllViajes() == null){
-            viajes = Viaje.generarViajes(40);
-            for(int i=0; i< viajes.size(); i++){
-                firebaseDatabaseService.guardarViaje(viajes.get(i));
-            }
-        }
         firebaseDatabaseService.getAllViajes().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -198,5 +209,5 @@ public class BuscarViajesActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(MainActivity.USUARIO_PRINCIPAL, usuarioPrincipal);
         startActivity(intent);
-    }
+    }*/
 }

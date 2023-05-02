@@ -26,9 +26,9 @@ public class FirebaseDatabaseService {
         return fDatabase.getReference("viaje/" + viajeId).getRef();
     }
 
-    public void guardarViaje(Viaje viaje) {
+    public void guardarViaje(Viaje viaje, DatabaseReference.CompletionListener completionListener) {
         ViajeDTO viajeDTO = new ViajeDTO(viaje);
-        fDatabase.getReference("viaje").child(viaje.getId()).setValue(viajeDTO);
+        fDatabase.getReference("viaje").child(viaje.getId()).setValue(viajeDTO, completionListener);
     }
 
     public void guardarUsuario(Usuario usuario, DatabaseReference.CompletionListener completionListener) {

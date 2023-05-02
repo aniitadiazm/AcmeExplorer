@@ -89,7 +89,7 @@ public class ViajeActivity extends AppCompatActivity {
                         }
                     });
                 }else{
-                    firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                    firebaseDatabaseService.setViajeAsNoFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
                         if (databaseError == null) {
                             viaje_favorito.setImageResource(R.drawable.corazon_vacio);
                         } else {
@@ -101,7 +101,7 @@ public class ViajeActivity extends AppCompatActivity {
 
             viaje_favorito.setOnClickListener(view -> {
                 if(viaje.isFavorito()) {
-                    firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                    firebaseDatabaseService.setViajeAsNoFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
                         if (databaseError == null) {
                             viaje_favorito.setImageResource(R.drawable.corazon_vacio);
                         } else {
