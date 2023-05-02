@@ -124,12 +124,6 @@ public class AutenticacionActivity extends AppCompatActivity {
         fAuth.addAuthStateListener(listener);
     }
 
-    @Override
-    protected void onStop(){
-        super.onStop();
-        if(listener != null)
-            fAuth.removeAuthStateListener(listener);
-    }
 
     private void attempAuthCorreo() {
 

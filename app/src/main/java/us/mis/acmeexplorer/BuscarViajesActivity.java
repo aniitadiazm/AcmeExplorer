@@ -47,20 +47,7 @@ public class BuscarViajesActivity extends AppCompatActivity {
 
         sharedPreferencesFiltro = getSharedPreferences(DatosViajes.filtro, MODE_PRIVATE);
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
-
-        if(firebaseDatabaseService.getAllViajes() == null){
-            DatosViajes.VIAJES = Viaje.generarViajes(40);
-            for(int i=0; i<DatosViajes.VIAJES.size(); i++){
-                firebaseDatabaseService.guardarViaje(DatosViajes.VIAJES.get(i), (databaseError, databaseReference) -> {
-                    if (databaseError == null) {
-                        Log.i("AcmeExplorer", "Los viajes se han creado correctamente");
-                    } else {
-                        Log.e("AcmeExplorer", "Error al crear los viaje: " + databaseError.getMessage());
-                    }
-                });
-            }
-        }
-
+        
         usuarioPrincipal = getIntent().getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
         firebaseDatabaseService.getUsuario(usuarioPrincipal.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -80,26 +67,17 @@ public class BuscarViajesActivity extends AppCompatActivity {
             }
         });
 
-        /*adaptadorViaje = new AdaptadorViaje(viajes, this, true, usuarioPrincipal);
-        switch_nColumnas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int spanCount = isChecked ? 2 : 1;
-                gridLayoutManager.setSpanCount(spanCount);
-                if(spanCount == 2){
-                    img_nColumnas.setImageResource(R.drawable.img_1columna);
-                } else {
-                    img_nColumnas.setImageResource(R.drawable.img_2columnas);
-                }
-            }
-        });
-        gridLayoutManager = new GridLayoutManager(this, 1);
-        recyclerView_viajes.setLayoutManager(gridLayoutManager);
-        recyclerView_viajes.setAdapter(adaptadorViaje);*/
     }
 
     private void obtenerViajes() {
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
+
+        if(firebaseDatabaseService.getAllViajes() == null){
+            viajes = Viaje.generarViajes(40);
+            for(int i=0; i< viajes.size(); i++){
+                firebaseDatabaseService.guardarViaje(viajes.get(i));
+            }
+        }
         firebaseDatabaseService.getAllViajes().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

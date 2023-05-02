@@ -4,6 +4,7 @@ package us.mis.acmeexplorer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +29,15 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
     private List<Viaje> viajes;
     private Context context;
     private boolean columnasSwitch;
-    private Usuario usuario;
+    private Usuario usuarioPrincipal;
 
-    public AdaptadorViaje(List<Viaje> viajes,  Context context, boolean columnasSwitch, Usuario usuario) {
+    FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
+
+    public AdaptadorViaje(List<Viaje> viajes,  Context context, boolean columnasSwitch, Usuario usuarioPrincipal) {
         this.viajes = viajes;
         this.context = context;
         this.columnasSwitch = columnasSwitch;
-        this.usuario = usuario;
+        this.usuarioPrincipal = usuarioPrincipal;
     }
 
     @NonNull
@@ -63,19 +66,41 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
         }
 
         if(viaje.isFavorito()) {
-            viajeViewHolder.corazon.setImageResource(R.drawable.corazon_lleno);
+            firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                if (databaseError == null) {
+                    viajeViewHolder.corazon.setImageResource(R.drawable.corazon_lleno);
+                } else {
+                    Log.e("AcmeExplorer", "Error al guardar viaje como favorito: " + databaseError.getMessage());
+                }
+            });
         }else{
-            viajeViewHolder.corazon.setImageResource(R.drawable.corazon_vacio);
+            firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                if (databaseError == null) {
+                    viajeViewHolder.corazon.setImageResource(R.drawable.corazon_vacio);
+                } else {
+                    Log.e("AcmeExplorer", "Error al descartar viaje como favorito: " + databaseError.getMessage());
+                }
+            });
         }
 
         ImageView viaje_favorito = viajeViewHolder.corazon.findViewById(R.id.viaje_corazon);
         viaje_favorito.setOnClickListener(v -> {
             if(viaje.isFavorito()) {
-                viaje.setFavorito(false);
-                viajeViewHolder.corazon.setImageResource(R.drawable.corazon_vacio);
+                firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                    if (databaseError == null) {
+                        viajeViewHolder.corazon.setImageResource(R.drawable.corazon_vacio);
+                    } else {
+                        Log.e("AcmeExplorer", "Error al descartar viaje como favorito: " + databaseError.getMessage());
+                    }
+                });
             }else{
-                viaje.setFavorito(true);
-                viajeViewHolder.corazon.setImageResource(R.drawable.corazon_lleno);
+                firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+                    if (databaseError == null) {
+                        viajeViewHolder.corazon.setImageResource(R.drawable.corazon_lleno);
+                    } else {
+                        Log.e("AcmeExplorer", "Error al guardar viaje como favorito: " + databaseError.getMessage());
+                    }
+                });
             }
         });
 
@@ -84,7 +109,7 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
             Intent intent = new Intent(context, ViajeActivity.class);
             intent.putExtra(DatosViajes.intentViaje, viaje);
             intent.putExtra("columnasSwitch", columnasSwitch);
-            intent.putExtra(DatosViajes.USUARIO_PRINCIPAL, usuario);
+            intent.putExtra(DatosViajes.USUARIO_PRINCIPAL, usuarioPrincipal);
             intent.putExtra("viaje_favorito", viaje.isFavorito());
             ((Activity) context).startActivityForResult(intent, 1);
 
