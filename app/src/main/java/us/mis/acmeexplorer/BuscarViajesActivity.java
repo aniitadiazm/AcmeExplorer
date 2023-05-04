@@ -51,7 +51,7 @@ public class BuscarViajesActivity extends AppCompatActivity {
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
 
         //Descomentar este fragmento para subir viajes a la base de datos
-        viajes = Viaje.generarViajes(40);
+        /*viajes = Viaje.generarViajes(40);
         for (int i = 0; i < viajes.size(); i++) {
             VIAJE = viajes.get(i);
             firebaseDatabaseService.guardarViaje(VIAJE, (databaseError, databaseReference) -> {
@@ -62,10 +62,10 @@ public class BuscarViajesActivity extends AppCompatActivity {
                     Log.e("AcmeExplorer", "Error al guardar el viaje en la BD: " + databaseError.getMessage());
                 }
             });
-        }
-    }
+        }*/
 
-   /*     usuarioPrincipal = getIntent().getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
+
+        usuarioPrincipal = getIntent().getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
         firebaseDatabaseService.getUsuario(usuarioPrincipal.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -209,5 +209,5 @@ public class BuscarViajesActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(MainActivity.USUARIO_PRINCIPAL, usuarioPrincipal);
         startActivity(intent);
-    }*/
+    }
 }

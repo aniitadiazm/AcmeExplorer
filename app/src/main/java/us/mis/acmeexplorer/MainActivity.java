@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView_favoritos;
     private ImageView iv_perfil;
     private TextView txt_perfil;
-    private Usuario usuario;
+    public static Usuario usuario;
     public static String USUARIO_PRINCIPAL = "usuarioPrincipal";
 
     @Override
@@ -78,16 +78,19 @@ public class MainActivity extends AppCompatActivity {
 
         imageView_buscar.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, BuscarViajesActivity.class);
+            intent.putExtra(PerfilUsuarioActivity.USUARIO_PRINCIPAL, usuario);
             startActivity(intent);
         });
 
         imageView_favoritos.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ViajesFavoritosActivity.class);
+            intent.putExtra(PerfilUsuarioActivity.USUARIO_PRINCIPAL, usuario);
             startActivity(intent);
         });
 
         iv_perfil.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, PerfilUsuarioActivity.class);
+            intent.putExtra(PerfilUsuarioActivity.USUARIO_PRINCIPAL, usuario);
             startActivity(intent);
         });
 

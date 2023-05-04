@@ -46,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AutenticacionActivity extends AppCompatActivity {
 
+    FirebaseUser usuario;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
     FirebaseAuth fAuth;
@@ -64,28 +65,7 @@ public class AutenticacionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autenticacion);
 
-        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("799577653974-q481mam10uipplgqeuujhb4jih1i6p9l.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
-
-        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-
         fAuth = FirebaseAuth.getInstance();
-
-        listener = new FirebaseAuth.AuthStateListener(){
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
-                FirebaseUser usuario= fAuth.getCurrentUser();
-                if(usuario == null){//No logueado
-                    Toast.makeText(getApplicationContext(), "Bienvenido a Acme Explorer", Toast.LENGTH_SHORT).show();
-                } else {//Logueado
-                    Intent intent = new Intent(AutenticacionActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
-            }
-        };
-
         et_correo = findViewById(R.id.editTextCorreoLogin);
         et_contra = findViewById(R.id.editTextContraseñaLogin);
         btn_Correo = findViewById(R.id.btn_correo);
@@ -94,6 +74,19 @@ public class AutenticacionActivity extends AppCompatActivity {
         ver_contra = findViewById(R.id.ver_contraseña);
         progressBar = findViewById(R.id.login_progress);
         progressBar.setVisibility(View.GONE);
+
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("799577653974-q481mam10uipplgqeuujhb4jih1i6p9l.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
+
+        listener = firebaseAuth -> {
+            usuario = fAuth.getCurrentUser();
+            Toast.makeText(getApplicationContext(), "Bienvenido a Acme Explorer", Toast.LENGTH_SHORT).show();
+        };
 
         ver_contra.setOnClickListener(v -> {
             if(viendo == false) {

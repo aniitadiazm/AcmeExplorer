@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "799577653974-8oputd3bbuvqie7cn7cuvacpvq7mhrse.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "us.mis.acmeexplorer",
+            "certificate_hash": "5eb046fbeab8a85591440312a6ac1aba2dbe45aa"
+          }
+        },
+        {
           "client_id": "799577653974-a5isav3g4gg2t596mnatv88tbaurrl6h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -35,6 +35,7 @@ public class ViajeDTO {
         this.incluido = viaje.getIncluido();
         this.latitud = viaje.getLatitud();
         this.longitud = viaje.getLongitud();
+        this.favorito = viaje.isFavorito();
     }
 
     public String getId() { return id; }
