@@ -66,6 +66,7 @@ public class ViajesFavoritosActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    viajes_favoritos.clear();
                     Long idCount = dataSnapshot.getChildrenCount();
                     for (DataSnapshot viajeIdDS : dataSnapshot.getChildren()) {
                         String viajeId = viajeIdDS.getValue(String.class);
@@ -122,27 +123,27 @@ public class ViajesFavoritosActivity extends AppCompatActivity {
     }
 
 
-  /*  @Override
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                usuario = intent.getParcelableExtra(DatosViajes.USUARIO);
+                usuarioPrincipal = intent.getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
                 getViajesFavoritosFromUsuario();
             }
         } else if(requestCode == 2) {
             if(resultCode == RESULT_OK) {
                 boolean filtro = intent.getBooleanExtra("filtro", false);
                 if(filtro) {
-                    viajes_favoritos = DatosViajes.VIAJES.stream().filter(Viaje::isFavorito).collect(Collectors.toList());;
+                    viajes_favoritos = viajes_favoritos.stream().filter(Viaje::isFavorito).collect(Collectors.toList());;
                     if(viajes_favoritos.size() == 0){
                         Toast.makeText(this, "No tienes viajes favoritos", Toast.LENGTH_LONG).show();
                     }
-                    adaptadorViaje = new AdaptadorViaje(viajes_favoritos, this, true);
+                    adaptadorViaje = new AdaptadorViaje(viajes_favoritos, this, true, usuarioPrincipal);
                     recyclerView.swapAdapter(adaptadorViaje, false);
                 }
             }
         }
-    }*/
+    }
 
 }

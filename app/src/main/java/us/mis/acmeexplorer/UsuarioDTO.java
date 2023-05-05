@@ -6,9 +6,11 @@ import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -19,7 +21,7 @@ public class UsuarioDTO {
     private String apellidos;
     private String correo;
     private String foto;
-    private Map<String, String> viajesFavoritos = new HashMap<>();
+    private List<Viaje> viajesFavoritos = new ArrayList<>();
 
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
@@ -53,9 +55,9 @@ public class UsuarioDTO {
 
     public void setFoto(String foto) { this.foto = foto; }
 
-    public Map<String, String> getViajesFavoritos() { return viajesFavoritos; }
+    public List<Viaje> getViajesFavoritos() { return viajesFavoritos; }
 
-    public void setViajesFavoritos(Map<String, String> viajesFavoritos) { this.viajesFavoritos = viajesFavoritos; }
+    public void setViajesFavoritos(List<Viaje> viajesFavoritos) { this.viajesFavoritos = viajesFavoritos; }
 
 
 }

@@ -131,7 +131,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:fontFamily="@font/arvo"
-                                    android:text="Precio por persona:" />
+                                    android:text="Precio:" />
 
                                 <TextView
                                     android:id="@+id/viaje_precio"

@@ -3,8 +3,8 @@ package us.mis.acmeexplorer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,13 +54,12 @@ public class ViajeActivity extends AppCompatActivity {
         btn_comprar = findViewById(R.id.btn_comprar);
         btn_mapa = findViewById(R.id.verMapa);
 
-        ViajeActivity.context = getApplicationContext();
-
         FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
 
         try{
-            viaje = getIntent().getParcelableExtra(DatosViajes.intentViaje);
-            usuarioPrincipal = getIntent().getParcelableExtra(DatosViajes.USUARIO_PRINCIPAL);
+            Bundle data = getIntent().getExtras();
+            viaje = (Viaje) data.getParcelable(DatosViajes.intentViaje);
+            usuarioPrincipal = (Usuario) data.getParcelable(MainActivity.USUARIO_PRINCIPAL);
 
             if(viaje != null) {
                 viaje_destino.setText(viaje.getDestino());
@@ -130,7 +129,7 @@ public class ViajeActivity extends AppCompatActivity {
             });
 
         }catch (Exception e){
-            Toast.makeText(this, "Se ha producido un error.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

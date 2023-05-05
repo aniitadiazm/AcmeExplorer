@@ -1,22 +1,24 @@
 package us.mis.acmeexplorer;
 
-import android.os.Bundle;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Usuario implements Parcelable {
+
+    private Usuario usuario;
     private String id;
     private String foto;
     private String nombre;
     private String apellidos;
     private String correo;
-    private Map<String, String> viajesFavoritos = new HashMap<>();
+    private List<Viaje> viajesFavoritos = new ArrayList<>();
 
     public static final Parcelable.Creator<Usuario> CREATOR = new Parcelable.Creator<Usuario>() {
         public Usuario createFromParcel(Parcel in) {
@@ -48,9 +50,9 @@ public class Usuario implements Parcelable {
 
     public void setFoto(String foto) { this.foto = foto; }
 
-    public Map<String, String> getViajesFavoritos() { return viajesFavoritos; }
+    public List<Viaje> getViajesFavoritos() { return viajesFavoritos; }
 
-    public void setViajesFavoritos(Map<String, String> viajesFavoritos) { this.viajesFavoritos = viajesFavoritos; }
+    public void setViajesFavoritos(List<Viaje> viajesFavoritos) { this.viajesFavoritos = viajesFavoritos; }
 
     public Usuario() {
     }
@@ -78,8 +80,8 @@ public class Usuario implements Parcelable {
         apellidos = in.readString();
         correo = in.readString();
         foto = in.readString();
-        readMapFromBundle(in, viajesFavoritos, viajesFavoritos.getClass().getClassLoader());
-
+        in.readList(this.viajesFavoritos, Viaje.class.getClassLoader());
+        usuario = in.readParcelable(Usuario.class.getClassLoader());
     }
 
     @Override
@@ -94,10 +96,11 @@ public class Usuario implements Parcelable {
         out.writeString(apellidos);
         out.writeString(correo);
         out.writeString(foto);
-        writeMapAsBundle(out, viajesFavoritos);
+        out.writeList(viajesFavoritos);
+        out.writeParcelable(usuario, flags);
     }
 
-    private void writeMapAsBundle(Parcel dest, Map<String, String> map) {
+   /* private void writeMapAsBundle(Parcel dest, Map<String, String> map) {
         Bundle bundle = new Bundle();
         if (map != null) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -113,7 +116,7 @@ public class Usuario implements Parcelable {
         for (String key : bundle.keySet()) {
             map.put(key, bundle.getString(key));
         }
-    }
+    }*/
 
 
 }

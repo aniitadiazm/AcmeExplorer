@@ -2,16 +2,17 @@ package us.mis.acmeexplorer;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.TimeZone;
 
 public class Viaje implements Parcelable {
 
+    private Viaje viaje;
     private String id;
     private String url;
     private String salida;
@@ -20,10 +21,8 @@ public class Viaje implements Parcelable {
     private Calendar fin;
     private Long precio;
     private String regimen;
-
     List<String> incluido;
     private boolean favorito;
-
     private Double latitud;
     private Double longitud;
 
@@ -38,21 +37,20 @@ public class Viaje implements Parcelable {
     };
 
     public Viaje(){
-
     }
-    private Viaje(String id, String salida, String destino, String url, Calendar inicio, Calendar fin,
-                  String regimen, Double latitud, Double longitud, List<String> incluido, Long precio, Boolean favorito) {
+    private Viaje(String id, String salida, String destino, String regimen, List<String> incluido, String url, Long precio, Calendar inicio,
+                  Calendar fin, Double latitud, Double longitud, Boolean favorito) {
         this.id = id;
         this.salida = salida;
         this.destino = destino;
+        this.regimen = regimen;
+        this.incluido = incluido;
         this.url = url;
+        this.precio = precio;
         this.inicio = inicio;
         this.fin = fin;
-        this.precio = precio;
-        this.regimen = regimen;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.incluido = incluido;
         this.favorito = favorito;
     }
 
@@ -60,7 +58,10 @@ public class Viaje implements Parcelable {
         this.id = viajeDTO.getId();
         this.salida = viajeDTO.getSalida();
         this.destino = viajeDTO.getDestino();
+        this.regimen = viajeDTO.getRegimen();
+        this.incluido = viajeDTO.getIncluido();
         this.url = viajeDTO.getUrl();
+        this.precio = viajeDTO.getPrecio();
         String[] inicioDTOarray = viajeDTO.getInicio().split("-");
         String[] finDTOarray = viajeDTO.getFin().split("-");
         Calendar inicioDTO = Calendar.getInstance();
@@ -69,29 +70,34 @@ public class Viaje implements Parcelable {
         endDateDTO.set(Integer.parseInt(finDTOarray[0]),Integer.parseInt(finDTOarray[1]),Integer.parseInt(finDTOarray[2]));
         this.inicio = inicioDTO;
         this.fin = endDateDTO;
-        this.precio = viajeDTO.getPrecio();
-        this.regimen = viajeDTO.getRegimen();
-        this.incluido = viajeDTO.getIncluido();
-        this.favorito = viajeDTO.isFavorito();
         this.latitud = viajeDTO.getLatitud();
         this.longitud = viajeDTO.getLongitud();
+        this.favorito = viajeDTO.isFavorito();
     }
 
     protected Viaje(Parcel in) {
         id = in.readString();
-        url = in.readString();
         salida = in.readString();
         destino = in.readString();
-        if (in.readByte() == 0) {
-            precio = null;
-        } else {
-            precio = in.readLong();
-        }
         regimen = in.readString();
+        incluido = in.createStringArrayList();
+        url = in.readString();
+        precio = in.readLong();
+        long startDateMiliseconds = in.readLong();
+        String startDateTimeZone = in.readString();
+        long endDateMiliseconds = in.readLong();
+        String endDateTimeZone = in.readString();
+        if (startDateMiliseconds != 1L) {
+            inicio = new GregorianCalendar(TimeZone.getTimeZone(startDateTimeZone));
+            inicio.setTimeInMillis(startDateMiliseconds);
+        }
+        if (endDateMiliseconds != 1L) {
+            fin = new GregorianCalendar(TimeZone.getTimeZone(endDateTimeZone));
+            fin.setTimeInMillis(endDateMiliseconds);
+        }
         latitud = in.readDouble();
         longitud = in.readDouble();
-        incluido = in.createStringArrayList();
-        favorito = in.readByte() != 0;
+        favorito = in.readBoolean();
     }
 
     public String getId() {
@@ -207,14 +213,14 @@ public class Viaje implements Parcelable {
             viajes.add(new Viaje(String.valueOf(i+1),
                     DatosViajes.salidas[salida],
                     DatosViajes.destinos[destino],
+                    DatosViajes.regimen[regimen],
+                    incluido,
                     DatosViajes.urlFotos[destino],
+                    Long.valueOf(precio),
                     inicioRandom,
                     finRandom,
-                    DatosViajes.regimen[regimen],
                     DatosViajes.latitudes[destino],
                     DatosViajes.longitudes[destino],
-                    incluido,
-                    Long.valueOf(precio),
                     favorito));
         }
 
@@ -228,21 +234,23 @@ public class Viaje implements Parcelable {
         if (o == null || getClass() != o.getClass()) return false;
         Viaje viaje = (Viaje) o;
 
-        return favorito == viaje.favorito &&
-                Objects.equals(id, viaje.id) &&
+        return Objects.equals(id, viaje.id) &&
                 Objects.equals(salida, viaje.salida) &&
                 Objects.equals(destino, viaje.destino) &&
                 regimen.equals(viaje.regimen) &&
                 incluido.equals(viaje.incluido) &&
                 url.equals(viaje.url) &&
+                Objects.equals(precio, viaje.precio) &&
                 Objects.equals(inicio, viaje.inicio) &&
                 Objects.equals(fin, viaje.fin) &&
-                Objects.equals(precio, viaje.precio);
+                latitud == viaje.latitud &&
+                longitud == viaje.longitud &&
+                favorito == viaje.favorito;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, salida, destino,  inicio, fin, regimen, incluido, url, precio, favorito);
+        return Objects.hash(id, salida, destino, regimen, incluido, url, precio, inicio, fin, latitud, longitud, favorito);
     }
 
     @Override
@@ -251,12 +259,14 @@ public class Viaje implements Parcelable {
                 "id=" + id +
                 ", salida='" + salida + '\'' +
                 ", destino='" + destino + '\'' +
-                ", inicio=" + inicio.get(Calendar.DAY_OF_MONTH) + "/" + inicio.get(Calendar.MONTH) + "/" + inicio.get(Calendar.YEAR) +
-                ", fin=" + fin.get(Calendar.DAY_OF_MONTH) + "/" +  fin.get(Calendar.MONTH) + "/" + fin.get(Calendar.YEAR) +
                 ", regimen='" + regimen + '\'' +
                 ", incluido='" + incluido + '\'' +
                 ", url='" + url + '\'' +
                 ", precio=" + precio +
+                ", inicio=" + inicio.get(Calendar.DAY_OF_MONTH) + "/" + inicio.get(Calendar.MONTH) + "/" + inicio.get(Calendar.YEAR) +
+                ", fin=" + fin.get(Calendar.DAY_OF_MONTH) + "/" +  fin.get(Calendar.MONTH) + "/" + fin.get(Calendar.YEAR) +
+                ", latitud=" + latitud +
+                ", longitud=" + longitud +
                 ", favorito=" + favorito +
                 '}';
     }
@@ -272,23 +282,18 @@ public class Viaje implements Parcelable {
         out.writeString(salida);
         out.writeString(destino);
         out.writeString(regimen);
-        out.writeStringList(incluido);
+        out.writeList(incluido);
         out.writeString(url);
-        if (inicio == null) {
-            out.writeLong(1L);
-            out.writeString("");
-        } else {
-            out.writeLong(inicio.getTimeInMillis());
-            out.writeString(fin.getTimeZone().getID());
-        }
-        if (fin == null) {
-            out.writeLong(1L);
-            out.writeString("");
-        } else {
-            out.writeLong(inicio.getTimeInMillis());
-            out.writeString(fin.getTimeZone().getID());
-        }
         out.writeLong(precio);
+        out.writeSerializable(inicio);
+        out.writeSerializable(fin);
+        out.writeLong(inicio.getTimeInMillis());
+        out.writeString(inicio.getTimeZone().getID());
+        out.writeLong(fin.getTimeInMillis());
+        out.writeString(fin.getTimeZone().getID());
+        out.writeDouble(latitud);
+        out.writeDouble(longitud);
+        out.writeBoolean(favorito);
     }
 
 }

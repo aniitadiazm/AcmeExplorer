@@ -74,40 +74,41 @@ public class ViajeDTO {
         ViajeDTO viajeDTO = (ViajeDTO) object;
 
         return Objects.equals(id, viajeDTO.id) &&
-                Objects.equals(precio, viajeDTO.precio) &&
-                Objects.equals(favorito, viajeDTO.favorito) &&
-                Objects.equals(incluido, viajeDTO.incluido) &&
                 Objects.equals(salida, viajeDTO.salida) &&
                 Objects.equals(destino, viajeDTO.destino) &&
+                Objects.equals(regimen, viajeDTO.regimen) &&
+                Objects.equals(incluido, viajeDTO.incluido) &&
+                Objects.equals(url, viajeDTO.url) &&
+                Objects.equals(precio, viajeDTO.precio) &&
                 Objects.equals(inicio, viajeDTO.inicio) &&
                 Objects.equals(fin, viajeDTO.fin) &&
-                Objects.equals(regimen, viajeDTO.regimen) &&
                 Objects.equals(latitud, viajeDTO.latitud) &&
                 Objects.equals(longitud, viajeDTO.longitud) &&
-                Objects.equals(url, viajeDTO.url);
+                Objects.equals(favorito, viajeDTO.favorito);
+
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, salida, destino,  inicio, fin, regimen, incluido, url, precio, favorito, latitud, longitud);
+        return Objects.hash(id, salida, destino, regimen, incluido, url, precio, inicio, fin, latitud, longitud, favorito);
     }
 
     @Override
     public String toString() {
         return "ViajeDTO{" +
                 "id=" + id +
-                ", precio='" + precio + '\'' +
-                ", favorito='" + favorito + '\'' +
-                ", incluido='" + incluido + '\'' +
                 ", salida='" + salida + '\'' +
                 ", destino='" + destino + '\'' +
-                ", inicio='" + inicio + '\'' +
-                ", fin=" + fin +
                 ", regimen='" + regimen + '\'' +
+                ", incluido='" + incluido + '\'' +
+                ", url='" + url + '\'' +
+                ", precio='" + precio + '\'' +
+                ", inicio='" + inicio + '\'' +
+                ", fin=" + fin + '\'' +
                 ", latitud='" + latitud + '\'' +
                 ", longitud='" + longitud + '\'' +
-                ", url='" + url + '\'' +
+                ", favorito='" + favorito + '\'' +
                 '}';
     }
 

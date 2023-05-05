@@ -30,6 +30,7 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
     private Context context;
     private boolean columnasSwitch;
     private Usuario usuarioPrincipal;
+    public static String VIAJE = "viaje_seleccionado";
 
     FirebaseDatabaseService firebaseDatabaseService = FirebaseDatabaseService.getServiceInstance();
 
@@ -74,7 +75,7 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
                 }
             });
         }else{
-            firebaseDatabaseService.setViajeAsFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
+            firebaseDatabaseService.setViajeAsNoFavorito(usuarioPrincipal.getId(), viaje.getId(), (databaseError, databaseReference) -> {
                 if (databaseError == null) {
                     viajeViewHolder.corazon.setImageResource(R.drawable.corazon_vacio);
                 } else {
@@ -109,7 +110,7 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
             Intent intent = new Intent(context, ViajeActivity.class);
             intent.putExtra(DatosViajes.intentViaje, viaje);
             intent.putExtra("columnasSwitch", columnasSwitch);
-            intent.putExtra(DatosViajes.USUARIO_PRINCIPAL, usuarioPrincipal);
+            intent.putExtra(MainActivity.USUARIO_PRINCIPAL, usuarioPrincipal);
             intent.putExtra("viaje_favorito", viaje.isFavorito());
             ((Activity) context).startActivityForResult(intent, 1);
 
@@ -155,4 +156,5 @@ public class AdaptadorViaje extends RecyclerView.Adapter<AdaptadorViaje.ViajeVie
         return fechaFormateada;
 
     }
+
 }

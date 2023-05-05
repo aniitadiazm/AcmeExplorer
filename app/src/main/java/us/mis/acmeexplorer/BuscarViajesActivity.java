@@ -35,7 +35,6 @@ public class BuscarViajesActivity extends AppCompatActivity {
     List<Viaje> viajes = new ArrayList<>();
     List<Viaje> viajesFiltrados = new ArrayList<>();
     private Usuario usuarioPrincipal;
-
     private Viaje VIAJE;
 
     @Override
@@ -56,10 +55,10 @@ public class BuscarViajesActivity extends AppCompatActivity {
             VIAJE = viajes.get(i);
             firebaseDatabaseService.guardarViaje(VIAJE, (databaseError, databaseReference) -> {
                 if (databaseError == null) {
-                    Log.i("AcmeExplorer", "El viaje se ha guardado correctamente: " + VIAJE.getId());
+                    Log.i("AcmeExplorer", "Los viajes se han guardado correctamente: " + VIAJE.getId());
 
                 } else {
-                    Log.e("AcmeExplorer", "Error al guardar el viaje en la BD: " + databaseError.getMessage());
+                    Log.e("AcmeExplorer", "Error al guardar los viajes en la BD: " + databaseError.getMessage());
                 }
             });
         }*/
@@ -98,7 +97,7 @@ public class BuscarViajesActivity extends AppCompatActivity {
                         ViajeDTO viajeDTO = viajeDS.getValue(ViajeDTO.class);
                         if (viajeDTO != null) {
                             Viaje viaje = new Viaje(viajeDTO);
-                            viaje.setFavorito(usuarioPrincipal.getViajesFavoritos().containsValue(viaje.getId()));
+                            viaje.setFavorito(usuarioPrincipal.getViajesFavoritos().contains(viaje.getId()));
                             viajes.add(viaje);
                         }
                     }
@@ -181,7 +180,7 @@ public class BuscarViajesActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                usuarioPrincipal = intent.getParcelableExtra(DatosViajes.USUARIO_PRINCIPAL);
+                usuarioPrincipal = intent.getParcelableExtra(MainActivity.USUARIO_PRINCIPAL);
                 obtenerViajes();
             }
         } else if(requestCode == 2) {
